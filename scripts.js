@@ -1,4 +1,3 @@
-/* eslint-disable */
 const API_URL = 'https://apis.is/company?name=';
 
 /**
@@ -8,21 +7,24 @@ const program = (() => {
   let companies;
 
 
-
   function displayCompany(companiesList) {
-    if (companiesList.length == 0) {
+    if (companiesList.length === 0) {
       displayError('Ekkert fyrirtæki fannst fyrir leitarstreng');
       return;
     }
     const container = companies.querySelector('.results');
     removeAll(container);
 
-    for (let company of companiesList) {
-      let name = company.name
-      let sn = company.sn
-      let active = company.active;
-      let address = company.address;
-      let div = createCompanyElement(name, sn, address, active);
+
+
+
+
+    for (let company of companiesList) { /* eslint-disable-line */
+      const {
+        name, sn, active, address,
+      } = company;
+
+      const div = createCompanyElement(name, sn, address, active);
       container.appendChild(div);
     }
   }
@@ -30,9 +32,9 @@ const program = (() => {
   function createCompanyElement(name, sn, address, active) {
     const div = el('div', 'company');
     if (active === 1) {
-      div.classList.add('company--active')
+      div.classList.add('company--active');
     } else {
-      div.classList.add('company--inactive')
+      div.classList.add('company--inactive');
     }
 
     const dl = el('dl');
@@ -67,7 +69,7 @@ const program = (() => {
   }
 
   function el(type, className) {
-    let element = document.createElement(type);
+    const element = document.createElement(type);
 
     if (className) {
       element.setAttribute('class', className);
@@ -84,8 +86,6 @@ const program = (() => {
   }
 
 
-
-
   function displayError(error) {
     const container = companies.querySelector('.results');
 
@@ -95,10 +95,10 @@ const program = (() => {
 
   }
 
-  function displayLoading(){
+  function displayLoading() {
     const container = companies.querySelector('.results');
     removeAll(container);
-    const loadingGifDiv = el('div','loading');
+    const loadingGifDiv = el('div', 'loading');
     const loadingGifImg = el('img');
     loadingGifImg.src = 'loading.gif';
     loadingGifDiv.appendChild(loadingGifImg);
@@ -121,7 +121,8 @@ const program = (() => {
       })
       .catch((error) => {
         displayError('Villa við að sækja gögn');
-      })
+        console.error(error);
+      });
   }
 
 
@@ -129,13 +130,11 @@ const program = (() => {
     e.preventDefault();
     const input = e.target.querySelector('input');
 
-    if(input.value.trim().length > 0){
+    if (input.value.trim().length > 0) {
       fetchData(input.value);
-    }else{
+    } else {
       displayError('Lén verður að vera strengur');
     }
-    
-
   }
 
   function init(_companies) {
