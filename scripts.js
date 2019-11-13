@@ -6,36 +6,18 @@ const API_URL = 'https://apis.is/company?name=';
 const program = (() => {
   let companies;
 
+  function el(type, className) {
+    const element = document.createElement(type);
 
-  function displayCompany(companiesList) {
-    if (companiesList.length === 0) {
-      displayError('Ekkert fyrirtæki fannst fyrir leitarstreng');
-      return;
+    if (className) {
+      element.setAttribute('class', className);
     }
-    const container = companies.querySelector('.results');
-    removeAll(container);
 
-
-
-
-
-    for (let company of companiesList) { /* eslint-disable-line */
-      const {
-        name, sn, active, address,
-      } = company;
-
-      const div = createCompanyElement(name, sn, address, active);
-      container.appendChild(div);
-    }
+    return element;
   }
 
   function createCompanyElement(name, sn, address, active) {
     const div = el('div', 'company');
-    if (active === 1) {
-      div.classList.add('company--active');
-    } else {
-      div.classList.add('company--inactive');
-    }
 
     const dl = el('dl');
 
@@ -55,36 +37,30 @@ const program = (() => {
     snDd.textContent = sn;
     dl.appendChild(snDd);
 
-    const addressDt = el('dt');
-    addressDt.textContent = 'Heimilisfang';
-    dl.appendChild(addressDt);
 
-    const addressDd = el('dd');
-    addressDd.textContent = address;
-    dl.appendChild(addressDd);
+    if (active === 1) {
+      div.classList.add('company--active');
+      const addressDt = el('dt');
+      addressDt.textContent = 'Heimilisfang';
+      dl.appendChild(addressDt);
+
+      const addressDd = el('dd');
+      addressDd.textContent = address;
+      dl.appendChild(addressDd);
+    } else {
+      div.classList.add('company--inactive');
+    }
 
     div.appendChild(dl);
 
     return div;
   }
 
-  function el(type, className) {
-    const element = document.createElement(type);
-
-    if (className) {
-      element.setAttribute('class', className);
-    }
-
-    return element;
-  }
-
   function removeAll(container) {
-
     while (container.firstChild) {
       container.removeChild(container.firstChild);
     }
   }
-
 
   function displayError(error) {
     const container = companies.querySelector('.results');
@@ -92,8 +68,27 @@ const program = (() => {
     removeAll(container);
 
     container.appendChild(document.createTextNode(error));
-
   }
+
+
+  function displayCompany(companiesList) {
+    if (companiesList.length === 0) {
+      displayError('Ekkert fyrirtæki fannst fyrir leitarstreng');
+      return;
+    }
+    const container = companies.querySelector('.results');
+    removeAll(container);
+
+    for (let company of companiesList) { /* eslint-disable-line */
+      const {
+        name, sn, active, address,
+      } = company;
+
+      const div = createCompanyElement(name, sn, address, active);
+      container.appendChild(div);
+    }
+  }
+
 
   function displayLoading() {
     const container = companies.querySelector('.results');
@@ -108,7 +103,6 @@ const program = (() => {
 
 
   function fetchData(company) {
-
     displayLoading();
     fetch(`${API_URL}${company}`)
       .then((response) => {
@@ -121,7 +115,7 @@ const program = (() => {
       })
       .catch((error) => {
         displayError('Villa við að sækja gögn');
-        console.error(error);
+        console.error(error); /* eslint-disable-line */
       });
   }
 
@@ -141,8 +135,6 @@ const program = (() => {
     companies = _companies;
     const form = companies.querySelector('form');
     form.addEventListener('submit', onSubmit);
-
-
   }
 
   return {
