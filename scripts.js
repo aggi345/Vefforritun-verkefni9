@@ -95,8 +95,10 @@ const program = (() => {
     removeAll(container);
     const loadingGifDiv = el('div', 'loading');
     const loadingGifImg = el('img');
+    const loadingText = document.createTextNode('Leita að fyrirtækjum...');
     loadingGifImg.src = 'loading.gif';
     loadingGifDiv.appendChild(loadingGifImg);
+    loadingGifDiv.appendChild(loadingText);
 
     container.appendChild(loadingGifDiv);
   }
