@@ -37,7 +37,6 @@ const program = (() => {
     snDd.textContent = sn;
     dl.appendChild(snDd);
 
-
     if (active === 1) {
       div.classList.add('company--active');
       const addressDt = el('dt');
